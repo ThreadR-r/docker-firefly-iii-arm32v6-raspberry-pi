@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 cat .env.docker | envsubst > .env
 
@@ -8,7 +8,8 @@ if [ "${INIT_DATABASE:="no"}" = "yes" ]; then
                echo "waiting mysql"
                sleep 10
        done
+       echo "php artisan migrate:refresh --seed --force" >> /dev/stdout
        php artisan migrate:refresh --seed --force
 fi
 
-/usr/bin/supervisord -c /tmp/supervisord.conf
+exec "$@"
