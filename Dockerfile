@@ -1,4 +1,3 @@
-
 FROM alpine:latest
 
 ENV FF_VERSION 4.6.8
@@ -46,8 +45,6 @@ COPY supervisord.conf /tmp/
 WORKDIR  /var/www/localhost/htdocs/firefly
 
 EXPOSE 80
-
-RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 
