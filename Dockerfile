@@ -1,8 +1,12 @@
+
 FROM alpine:latest
 
-ENV FF_VERSION 4.6.5
+ENV FF_VERSION 4.6.8
 
-RUN apk update && apk upgrade && apk add --no-cache gettext curl \
+ENV FF_APP_KEY=SomeRandomStringOf32CharsExactly
+ENV FF_APP_ENV=production
+
+RUN    apk update && apk add --no-cache  \
     php7 \
     php7-fpm \
     php7-openssl \
@@ -17,38 +21,37 @@ RUN apk update && apk upgrade && apk add --no-cache gettext curl \
     php7-session \
     php7-ctype \
     php7-pdo_mysql \
+    php7-pdo_pgsql \
     php7-tokenizer \
     supervisor \
-    lighttpd && \
-    
-  curl -o /tmp/composer-setup.php https://getcomposer.org/installer && \
-  curl -o /tmp/composer-setup.sig https://composer.github.io/installer.sig && \
-  php -r "if (hash('SHA384', file_get_contents('/tmp/composer-setup.php')) !== trim(file_get_contents('/tmp/composer-setup.sig'))) { unlink('/tmp/composer-setup.php'); echo 'Invalid installer' . PHP_EOL; exit(1); }" && \
-  chmod +x /tmp/composer-setup.php && \
-  php /tmp/composer-setup.php && \
-  mv composer.phar /usr/local/bin/composer && \
-  rm -f /tmp/composer-setup.{php,sig} && \
-  mkdir -p /var/www/localhost/htdocs/firefly && curl -L https://github.com/firefly-iii/firefly-iii/archive/${FF_VERSION}.tar.gz | tar xz -C /var/www/localhost/htdocs/firefly --strip-components=1 && \
-  cd /var/www/localhost/htdocs/firefly && composer install --no-scripts --no-dev && \
-  find /var/www/localhost/htdocs/ -type d -exec chmod 770 {} \; && \
-  find /var/www/localhost/htdocs/ -type f -exec chmod 660 {} \; && \
-  chown -R lighttpd:nobody /var/www/localhost/htdocs/
+    gettext \
+    curl \
+    nginx
 
-COPY entrypoint.sh /root/
-COPY lighttpd.custom.conf /etc/lighttpd/
+
+RUN   mkdir -p /var/www/localhost/htdocs/firefly /run/nginx && \
+   curl -sSL https://github.com/firefly-iii/firefly-iii/archive/${FF_VERSION}.tar.gz | tar xz -C /var/www/localhost/htdocs/firefly --strip-components=1 && \
+   cd /var/www/localhost/htdocs/firefly && \
+   curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
+   composer install --prefer-dist --no-dev --no-scripts && \
+   find /var/www/localhost/htdocs/ -type d -exec chmod 770 {} \; && \
+   find /var/www/localhost/htdocs/ -type f -exec chmod 660 {} \; && \
+   chown -R nginx:nobody /var/www/localhost/htdocs/
+
+
+COPY entrypoint.sh /
+COPY custom.conf /etc/nginx/conf.d/default.conf
 COPY supervisord.conf /tmp/
-
-RUN chmod +x /root/entrypoint.sh 
-RUN chmod o+w /dev/stdout && ln -sf /dev/stdout /var/log/lighttpd/access.log && ln -sf /dev/stdout /var/log/lighttpd/error.log
-
-EXPOSE 80
 
 WORKDIR  /var/www/localhost/htdocs/firefly
 
-ENTRYPOINT ["/root/entrypoint.sh"]
+EXPOSE 80
+
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
 
 LABEL url=https://api.github.com/repos/firefly-iii/firefly-iii/releases/latest
-LABEL name=firefly
 LABEL version=${FF_VERSION}
 
-CMD /usr/bin/supervisord -c /tmp/supervisord.conf
+CMD ["/usr/bin/supervisord", "-c /tmp/supervisord.conf"]
