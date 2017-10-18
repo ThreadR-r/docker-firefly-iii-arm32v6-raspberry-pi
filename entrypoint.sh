@@ -14,7 +14,7 @@ sed -i 's/DB_PORT=3306/DB_CONNECTION=${FF_DB_PORT}/g' .env.docker
 cat .env.docker | envsubst > .env
 
 if [ "${INIT_DATABASE:="no"}" = "yes" ]; then
-       until php artisan firefly:verify &>/dev/null
+       until php artisan firefly:verify >> /dev/stdout
        do
                echo "waiting mysql"
                sleep 10
