@@ -28,6 +28,8 @@ RUN    apk update && apk add --no-cache  \
     nginx
 
 
+COPY entrypoint.sh /
+
 RUN   mkdir -p /var/www/localhost/htdocs/firefly /run/nginx && \
    curl -sSL https://github.com/firefly-iii/firefly-iii/archive/${FF_VERSION}.tar.gz | tar xz -C /var/www/localhost/htdocs/firefly --strip-components=1 && \
    cd /var/www/localhost/htdocs/firefly && \
@@ -35,10 +37,10 @@ RUN   mkdir -p /var/www/localhost/htdocs/firefly /run/nginx && \
    composer install --prefer-dist --no-dev --no-scripts && \
    find /var/www/localhost/htdocs/ -type d -exec chmod 770 {} \; && \
    find /var/www/localhost/htdocs/ -type f -exec chmod 660 {} \; && \
-   chown -R nginx:nobody /var/www/localhost/htdocs/
+   chown -R nginx:nobody /var/www/localhost/htdocs/ && \
+   chmod +x /entrypoint.sh
 
 
-COPY entrypoint.sh /
 COPY custom.conf /etc/nginx/conf.d/default.conf
 COPY supervisord.conf /tmp/
 
