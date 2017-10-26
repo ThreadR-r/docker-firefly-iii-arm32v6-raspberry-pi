@@ -40,11 +40,12 @@ RUN   mkdir -p /var/www/localhost/htdocs/firefly /run/nginx && \
    chown -R nginx:nobody /var/www/localhost/htdocs/ && \
    chmod +x /entrypoint.sh
 
+RUN mkdir -p /tmp/test && ln -s /var/www/localhost/htdocs/firefly/.env  /tmp/test/.env
 
 COPY custom.conf /etc/nginx/conf.d/default.conf
 COPY supervisord.conf /tmp/
 
-VOLUME  /var/www/localhost/htdocs/firefly/.env
+VOLUME  /tmp/test/
 
 WORKDIR  /var/www/localhost/htdocs/firefly
 
