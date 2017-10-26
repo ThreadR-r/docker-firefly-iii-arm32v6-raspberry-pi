@@ -44,7 +44,7 @@ RUN   mkdir -p /var/www/localhost/htdocs/firefly /run/nginx && \
 COPY custom.conf /etc/nginx/conf.d/default.conf
 COPY supervisord.conf /tmp/
 
-VOLUME  /var/www/localhost/htdocs/firefly
+VOLUME  /var/www/localhost/htdocs/firefly/.env
 
 WORKDIR  /var/www/localhost/htdocs/firefly
 
