@@ -5,6 +5,8 @@ ENV FF_VERSION 4.6.8
 ENV FF_APP_KEY=SomeRandomStringOf32CharsExactly
 ENV FF_APP_ENV=production
 
+COPY entrypoint.sh /
+
 RUN    apk update && apk add --no-cache  \
     php7 \
     php7-fpm \
@@ -25,12 +27,9 @@ RUN    apk update && apk add --no-cache  \
     supervisor \
     gettext \
     curl \
-    nginx
-
-
-COPY entrypoint.sh /
-
-RUN   mkdir -p /var/www/localhost/htdocs/firefly /run/nginx && \
+    nginx \
+    tzdata && \
+   mkdir -p /var/www/localhost/htdocs/firefly /run/nginx && \
    curl -sSL https://github.com/firefly-iii/firefly-iii/archive/${FF_VERSION}.tar.gz | tar xz -C /var/www/localhost/htdocs/firefly --strip-components=1 && \
    cd /var/www/localhost/htdocs/firefly && \
    curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
@@ -39,8 +38,9 @@ RUN   mkdir -p /var/www/localhost/htdocs/firefly /run/nginx && \
    find /var/www/localhost/htdocs/ -type f -exec chmod 660 {} \; && \
    chown -R nginx:nobody /var/www/localhost/htdocs/ && \
    chmod +x /entrypoint.sh
+ 
 
-RUN mkdir -p /tmp/test && ln -s /var/www/localhost/htdocs/firefly/.env  /tmp/test/.env
+RUN ln -s /tmp/test/.env /var/www/localhost/htdocs/firefly/.env  
 
 COPY custom.conf /etc/nginx/conf.d/default.conf
 COPY supervisord.conf /tmp/
