@@ -17,7 +17,7 @@ if [ "${INIT_DATABASE:="no"}" = "yes" ]; then
        until php artisan firefly:verify >> /dev/stdout
        do
                echo "waiting mysql"
-               sleep 10
+               sleep 300
        done
        echo "php artisan migrate:refresh --seed --force" >> /dev/stdout
        php artisan migrate:refresh --seed --force
