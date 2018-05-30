@@ -53,7 +53,7 @@ EXPOSE 80
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-LABEL url=https://api.github.com/repos/firefly-iii/firefly-iii/releases/latest
+LABEL url=https://github.com/firefly-iii/firefly-iii/
 LABEL version=${FF_VERSION}
 
 CMD ["/usr/bin/supervisord", "-c /tmp/supervisord.conf"]
