@@ -1,6 +1,6 @@
-FROM alpine:3.7
+FROM arm32v6/alpine:latest
 
-ENV FF_VERSION 4.6.8
+ENV FF_VERSION 4.8.2
 
 ENV FF_APP_KEY=SomeRandomStringOf32CharsExactly
 ENV FF_APP_ENV=production
