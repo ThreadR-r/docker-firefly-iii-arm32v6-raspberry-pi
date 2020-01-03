@@ -1,4 +1,5 @@
 FROM arm32v6/alpine:latest
+COPY qemu-arm-static /usr/bin/
 
 ENV FF_VERSION 4.8.2
 
