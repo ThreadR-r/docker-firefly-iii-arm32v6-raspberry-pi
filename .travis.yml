@@ -1,0 +1,36 @@
+sudo: required
+
+services:
+- docker
+
+language: bash
+
+script:
+- if [ -z "$TRAVIS_TAG" ]; then exit 0; fi
+# prepare qemu
+- docker run --rm --privileged multiarch/qemu-user-static:register --reset
+# get qemu-arm-static binary
+- mkdir tmp
+- >
+  pushd tmp &&
+  QEMU_USER_STATIC_ARCH=arm &&
+  QEMU_USER_STATIC_DOWNLOAD_URL="https://github.com/multiarch/qemu-user-static/releases/download" &&
+  QEMU_USER_STATIC_LATEST_TAG=$(curl -s https://api.github.com/repos/multiarch/qemu-user-static/tags &&
+    | grep 'name.*v[0-9]' \
+    | head -n 1 \
+    | cut -d '"' -f 4)
+  curl -L -o qemu-arm-static.tar.gz "${QEMU_USER_STATIC_DOWNLOAD_URL}/${QEMU_USER_STATIC_LATEST_TAG}/x86_64_qemu-${QEMU_USER_STATIC_ARCH}-static.tar.gz" &&
+  tar xzf qemu-arm-static.tar.gz &&
+  popd
+# build image
+- docker build -t threadrr/firefly-iii-arm32v6-raspberry-pi:build .
+# test image
+- docker run threadrr/firefly-iii-arm32v6-raspberry-pi:build uname -a
+# push image
+- >
+  export TAG=$TRAVIS_TAG
+  docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+  docker tag threadrr/firefly-iii-arm32v6-raspberry-pi:build threadrr/firefly-iii-arm32v6-raspberry-pi:$TAG
+  docker tag threadrr/firefly-iii-arm32v6-raspberry-pi:build threadrr/firefly-iii-arm32v6-raspberry-pi:latest
+  docker push threadrr/firefly-iii-arm32v6-raspberry-pi:$TAG
+  docker push threadrr/firefly-iii-arm32v6-raspberry-pi:latest
