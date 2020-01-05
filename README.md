@@ -14,4 +14,4 @@ This image use php7-fpm with nginx instead of apache2 in official image
 `-e DB_PASSWORD=CHANGEME \`  
 `-e DB_CONNECTION=mysql \`  
 `-e DB_PORT=3306 \`  
-`-it threadrr/firefly-iii-arm32v6:latest`
+`-it threadrr/firefly-iii-arm32v6-raspberry-pi:latest`
