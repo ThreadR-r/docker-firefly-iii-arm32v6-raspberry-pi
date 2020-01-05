@@ -19,10 +19,9 @@ script:
 # build image
 - docker build -t threadrr/firefly-iii-arm32v6-raspberry-pi:build .
 # push image
-- >
-  export TAG=$TRAVIS_TAG
-  docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
-  docker tag threadrr/firefly-iii-arm32v6-raspberry-pi:build threadrr/firefly-iii-arm32v6-raspberry-pi:$TAG
-  docker tag threadrr/firefly-iii-arm32v6-raspberry-pi:build threadrr/firefly-iii-arm32v6-raspberry-pi:latest
-  docker push threadrr/firefly-iii-arm32v6-raspberry-pi:$TAG
-  docker push threadrr/firefly-iii-arm32v6-raspberry-pi:latest
+- export TAG=$TRAVIS_TAG
+- docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+- docker tag threadrr/firefly-iii-arm32v6-raspberry-pi:build threadrr/firefly-iii-arm32v6-raspberry-pi:$TAG
+- docker tag threadrr/firefly-iii-arm32v6-raspberry-pi:build threadrr/firefly-iii-arm32v6-raspberry-pi:latest
+- docker push threadrr/firefly-iii-arm32v6-raspberry-pi:$TAG
+- docker push threadrr/firefly-iii-arm32v6-raspberry-pi:latest
