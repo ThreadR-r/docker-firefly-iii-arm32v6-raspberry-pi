@@ -10,15 +10,12 @@ script:
 # prepare qemu
 - docker run --rm --privileged multiarch/qemu-user-static:register --reset
 # get qemu-arm-static binary
-- mkdir tmp
 - >
-  pushd tmp &&
   QEMU_USER_STATIC_ARCH=arm &&
   QEMU_USER_STATIC_DOWNLOAD_URL="https://github.com/multiarch/qemu-user-static/releases/download" &&
   QEMU_USER_STATIC_LATEST_TAG=$(curl -s https://api.github.com/repos/multiarch/qemu-user-static/tags | grep 'name.*v[0-9]' | head -n 1 | cut -d '"' -f 4) &&
   curl -L -o qemu-arm-static.tar.gz "${QEMU_USER_STATIC_DOWNLOAD_URL}/${QEMU_USER_STATIC_LATEST_TAG}/x86_64_qemu-${QEMU_USER_STATIC_ARCH}-static.tar.gz" &&
-  tar xzf qemu-arm-static.tar.gz &&
-  popd
+  tar xzf qemu-arm-static.tar.gz
 # build image
 - docker build -t threadrr/firefly-iii-arm32v6-raspberry-pi:build .
 # test image
