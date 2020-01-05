@@ -18,8 +18,6 @@ script:
   tar xzf qemu-arm-static.tar.gz
 # build image
 - docker build -t threadrr/firefly-iii-arm32v6-raspberry-pi:build .
-# test image
-- docker run threadrr/firefly-iii-arm32v6-raspberry-pi:build uname -a
 # push image
 - >
   export TAG=$TRAVIS_TAG
