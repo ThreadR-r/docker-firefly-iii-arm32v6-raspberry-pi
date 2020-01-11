@@ -46,7 +46,7 @@ RUN    apk update && apk add --no-cache  \
    find /var/www/localhost/htdocs/ -type d -exec chmod 770 {} \; && \
    find /var/www/localhost/htdocs/ -type f -exec chmod 660 {} \; && \
    chown -R nginx:nobody /var/www/localhost/htdocs/ && \
-   curl "https://raw.githubusercontent.com/firefly-iii/docker/master/scripts/entrypoint.sh" > $FIREFLY_PATH/.deploy/docker/entrypoint.sh && \
+   curl "https://raw.githubusercontent.com/firefly-iii/docker/master/scripts/entrypoint.sh" --create-dirs -o $FIREFLY_PATH/.deploy/docker/entrypoint.sh && \
    chmod +x $FIREFLY_PATH/.deploy/docker/entrypoint.sh
  
 
