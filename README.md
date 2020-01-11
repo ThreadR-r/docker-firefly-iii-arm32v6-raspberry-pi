@@ -15,3 +15,7 @@ This image use php7-fpm with nginx instead of apache2 in official image
 `-e DB_CONNECTION=mysql \`  
 `-e DB_PORT=3306 \`  
 `-it threadrr/firefly-iii-arm32v6-raspberry-pi:latest`
+
+
+Firefly-iii Official repository:
+https://github.com/firefly-iii/firefly-iii
