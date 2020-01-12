@@ -37,6 +37,7 @@ RUN    apk update && apk add --no-cache  \
     gettext \
     curl \
     nginx \
+    bash \
     tzdata && \
    mkdir -p $FIREFLY_PATH /run/nginx && \
    curl -sSL https://github.com/firefly-iii/firefly-iii/archive/${FF_VERSION}.tar.gz | tar xz -C $FIREFLY_PATH --strip-components=1 && \
@@ -63,7 +64,6 @@ EXPOSE 80
 
 RUN sed -i 's/chown -R www-data:www-data -R $FIREFLY_PATH/chown -R nginx:nobody $FIREFLY_PATH/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
     sed -i 's/exec apache2-foreground/\/usr\/bin\/supervisord -c \/tmp\/supervisord.conf/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
-    sed -i 's/#!\/bin\/bash/#!\/usr\/bin\/env sh/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
     sed -i 's/echo \"Now in entrypoint.sh for Firefly III\"/echo \"Now in entrypoint.sh for Firefly III\" \&\& env > "${FIREFLY_PATH}"\/.env/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh
 
 
