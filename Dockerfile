@@ -64,7 +64,7 @@ EXPOSE 80
 
 RUN sed -i 's/chown -R www-data:www-data -R $FIREFLY_PATH/chown -R nginx:nobody $FIREFLY_PATH/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
     sed -i 's/exec apache2-foreground/\/usr\/bin\/supervisord -c \/tmp\/supervisord.conf/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
-    sed -i 's/# make sure we own everything/# make sure we own everything\n chmod -R 775 $FIREFLY_PATH/storage/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
+    sed -i 's/# make sure we own everything/# make sure we own everything\n chmod -R 775 $FIREFLY_PATH\/storage/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
     sed -i 's/echo \"Now in entrypoint.sh for Firefly III\"/echo \"Now in entrypoint.sh for Firefly III\" \&\& env > "${FIREFLY_PATH}"\/.env/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh
 
 
