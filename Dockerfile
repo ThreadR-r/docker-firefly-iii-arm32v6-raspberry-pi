@@ -1,7 +1,7 @@
 FROM arm32v6/alpine:latest
 COPY qemu-arm-static /usr/bin/
 
-ENV FF_VERSION 5.0.3
+ENV FF_VERSION 5.0.2
 
 ENV APP_ENV=local
 
