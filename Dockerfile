@@ -1,7 +1,7 @@
 FROM arm32v6/alpine:latest
 COPY qemu-arm-static /usr/bin/
 
-ENV FF_VERSION 5.0.4
+ENV FF_VERSION 5.0.5
 
 ENV APP_ENV=local
 
@@ -62,11 +62,11 @@ VOLUME $FIREFLY_PATH/storage/export $FIREFLY_PATH/storage/upload
 
 EXPOSE 80
 
-RUN sed -i 's/chown -R www-data:www-data -R $FIREFLY_PATH/chown -R nginx:nobody $FIREFLY_PATH/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
-    sed -i 's/exec apache2-foreground/\/usr\/bin\/supervisord -c \/tmp\/supervisord.conf/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
-    sed -i 's/# make sure we own everything/# make sure we own everything\n chmod -R 775 $FIREFLY_PATH\/storage/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
-    sed -i 's/echo \"Now in entrypoint.sh for Firefly III\"/echo \"Now in entrypoint.sh for Firefly III\" \&\& env > "${FIREFLY_PATH}"\/.env/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh
-
+RUN sed -i '118s/.*/chown -R nginx:nobody $FIREFLY_PATH/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
+    sed -i '224s/.*/chown -R nginx:nobody $FIREFLY_PATH\/storage/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
+    sed -i '229s/.*/\/usr\/bin\/supervisord -c \/tmp\/supervisord.conf/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
+    sed -i '120s/.*/chmod -R 775 $FIREFLY_PATH\/storage/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
+    sed -i '3s/.*/echo \"Now in entrypoint.sh for Firefly III\" \&\& env > "${FIREFLY_PATH}"\/.env/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh
 
 ENTRYPOINT $FIREFLY_PATH/.deploy/docker/entrypoint.sh
 
