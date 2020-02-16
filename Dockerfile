@@ -66,6 +66,7 @@ RUN sed -i '118s/.*/chown -R nginx:nobody $FIREFLY_PATH/g' ${FIREFLY_PATH}/.depl
     sed -i '224s/.*/chown -R nginx:nobody $FIREFLY_PATH\/storage/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
     sed -i '229s/.*/\/usr\/bin\/supervisord -c \/tmp\/supervisord.conf/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
     sed -i '120s/.*/chmod -R 775 $FIREFLY_PATH\/storage/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
+    sed -i '225s/.*/echo \"Run chmod on $FIREFLY_PATH\/storage...\" \n chmod -R 775 $FIREFLY_PATH\/storage/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh && \
     sed -i '3s/.*/echo \"Now in entrypoint.sh for Firefly III\" \&\& env > "${FIREFLY_PATH}"\/.env/g' ${FIREFLY_PATH}/.deploy/docker/entrypoint.sh
 
 ENTRYPOINT $FIREFLY_PATH/.deploy/docker/entrypoint.sh
